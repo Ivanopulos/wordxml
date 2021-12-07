@@ -6,16 +6,41 @@ from docx.oxml.shared import qn  # feel free to move these out
 from docx.oxml.xmlchemy import OxmlElement
 from tkinter import filedialog
 import sys
+import win32com.client  # pip install pypiwin32
+
+print(os.environ.get( "USERNAME" ))
+def run_macro(name):
+    print('macro')
+    # #this if is here because if an executable is created, __file__ doesn't work
+    # if getattr(sys, 'frozen', False):
+    #     name = (os.path.dirname(sys.executable) + '\\Forecast template.xlsm')
+    #
+    # else:
+    #     name = str(os.path.dirname(os.path.realpath(__file__)) + '\\Forecast template.xlsm')
+    #
+    # print(name)
+    #this part runs the macro from excel
+    if os.path.exists(name):
+        xl = win32com.client.Dispatch("Excel.Application")
+        xl.Workbooks.Open(Filename=name, ReadOnly=1)
+        xl.Application.Run("'C:\\Users\\" + os.environ.get( "USERNAME" ) + "\\AppData\\Roaming\\Microsoft\\AddIns\\Ivax.xlam'!цвета")
+        xl.Application.Quit() # Comment this out if your excel script closes
+        del xl
+
+    print('File refreshed!')
+
+
 
 print("ворд")
 pathword = filedialog.askopenfilename()
 pathwork = os.path.dirname(pathword)
 pathzip = pathwork + "/B.zip"
 pathword2 = pathwork + "/Шаблон написания справки.xlsx"
-mem=0
-isch=0
-usch=0
-found=""
+mem = 0
+isch = 0
+usch = 0
+found = ""
+run_macro(pathword2)
 df = pandas.read_excel(pathword2)
 
 
@@ -23,7 +48,6 @@ def resource_path(relative):
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, relative)
     return os.path.join(relative)
-
 
 def _set_cell_background(cell, fill, color=None, val=None):
     """
@@ -45,8 +69,6 @@ def _set_cell_background(cell, fill, color=None, val=None):
     if val:
         pass # TODO
     cell_properties.append(cell_shading)  # finally extend cell props with shading element
-
-#w:fill="FFFFFF" w:themeFill="background1"
 
 def info_update(doc, old_info, new_info, colorr):  # Paint cells
     outtt = 0
@@ -81,10 +103,11 @@ def info_update1(doc, old_info, new_info):  # Delete stroke
                 return
 
 
-def delete_paragraph(paragraph):
+def delete_paragraph(paragraph):   # Delete stroke+
     p = paragraph._element
     p.getparent().remove(p)
     p._p = p._element = None
+
 
 doc = docx.Document(pathword)
 for i in range(50, len(df.index)): #len(df.index)
@@ -124,6 +147,7 @@ with open(pathwork + "/B/word/document.xml", 'w', encoding='utf-8') as f:  # loo
                     if str(df.iloc[dfn, 0]) == found:
                         if str(df.iloc[dfn, 1]) == "nan":
                             df.iloc[dfn, 1] = ""
+
                         get_all[isch] = get_all[isch][:usch] + str(df.iloc[dfn, 1]) + get_all[isch][usch+len(found):]
                 found = ""
             usch = usch - 1
