@@ -147,8 +147,12 @@ with open(pathwork + "/B/word/document.xml", 'w', encoding='utf-8') as f:  # loo
                     if str(df.iloc[dfn, 0]) == found:
                         if str(df.iloc[dfn, 1]) == "nan":
                             df.iloc[dfn, 1] = ""
-
-                        get_all[isch] = get_all[isch][:usch] + str(df.iloc[dfn, 1]) + get_all[isch][usch+len(found):]
+                        try:
+                            float(df.iloc[dfn, 1])
+                            tostring1 = str(df.iloc[dfn, 1]).replace(".", ",")
+                        except:
+                            tostring1 = str(df.iloc[dfn, 1])
+                        get_all[isch] = get_all[isch][:usch] + tostring1 + get_all[isch][usch+len(found):]
                 found = ""
             usch = usch - 1
         isch = isch + 1
@@ -165,6 +169,7 @@ try:
 except:
     asd = 1
 os.rename(pathwork + "/B.zip", pathwork + "/" + str(df.iloc[696, 1]) + ".docx")
+print("Tak uje finish:", str(df.iloc[696, 1]))
 
 
 
