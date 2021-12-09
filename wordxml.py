@@ -29,8 +29,6 @@ def run_macro(name):
 
     print('File refreshed!')
 
-
-
 print("ворд")
 pathword = filedialog.askopenfilename()
 pathwork = os.path.dirname(pathword)
@@ -42,7 +40,6 @@ usch = 0
 found = ""
 run_macro(pathword2)
 df = pandas.read_excel(pathword2)
-
 
 def resource_path(relative):
     if hasattr(sys, "_MEIPASS"):
@@ -89,7 +86,6 @@ def info_update(doc, old_info, new_info, colorr):  # Paint cells
                 c=c+1
             r=r+1
 
-
 def info_update1(doc, old_info, new_info):  # Delete stroke
     outt=0
     for para in doc.paragraphs:
@@ -102,12 +98,10 @@ def info_update1(doc, old_info, new_info):  # Delete stroke
             if outt == 1:
                 return
 
-
 def delete_paragraph(paragraph):   # Delete stroke+
     p = paragraph._element
     p.getparent().remove(p)
     p._p = p._element = None
-
 
 doc = docx.Document(pathword)
 for i in range(50, len(df.index)): #len(df.index)
@@ -170,12 +164,4 @@ except:
     asd = 1
 os.rename(pathwork + "/B.zip", pathwork + "/" + str(df.iloc[696, 1]) + ".docx")
 print("Tak uje finish:", str(df.iloc[696, 1]))
-
-
-
-
-# mf2 = open("items2.xml", "w")
-# mf2.write(nf)
-#myzip.write("word/document.xml", "C:/Users/IMatveev/Desktop/ппворд/A.zip\\test.py", zipfile.ZIP_DEFLATED )
-
 
